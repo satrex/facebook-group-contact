@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+    .tutorial { margin-bottom: 60px;}
+    </style>
+    <script>
+      // Prevent forms from submitting.
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      function handleFormSubmit(formObject) {
+//        google.script.run.withSuccessHandler(updateUrl).processForm(formObject);
+        google.script.run.withSuccessHandler(updateText).getNames(formObject);
+      }
+
+      function updateText(text) {
+        var tutorialDiv = document.getElementById('tutorial');
+        tutorialDiv.style.display = 'none';
+        var div = document.getElementById('output');
+        div.innerText = text;
+      }
+      
+      function updateUrl(url) {
+        var div = document.getElementById('output');
+        div.innerHTML = '<a href="' + url + '">ファイルを開いてください</a>';
+      }
+      
+      function toggleUsage(bool isHidden){
+        var value = isHidden? 'none': 'block';
+        var tutorialDiv = document.getElementById('tutorial');
+        tutorialDiv.style.display = value;
+      }
+      
+//      function comboChange(){
+//        alert('came');
+//        obj = document.myForm.fileKind;
+//
+//        index= obj.selectedIndex;
+//        alert(index);
+//        document.findElementById("img").source = source(index);
+//      }
+//      
+//      function source(i){
+//        var sources =
+//        ["http://drive.google.com/uc?export=view&id=1_qmJw7VJTlxI6uTg6Rn68VGmQRBNAiKw" ,
+//        "",
+//        "http://drive.google.com/uc?export=view&id=1hl2P2MRLJq6kfNf69CqwRxNHA3jwi_3J" ];
+//        return sources[i];
+//      }
+    </script>
+  </head>
+  <body>
+  <div class="container">
+  <!-- Content here -->
+    <h1>facebook名前抽出ツール</h1>
+    <p></p>
+    <form id="myForm" onsubmit="handleFormSubmit(this)">
+      <label>ファイル種別 </label>
+      <select name="fileKind" onchange="comboChange()">
+        <option value="friends">友達一覧</option>
+        <option value="group">グループメンバー一覧</option>
+        <option value="groupchat">グループチャットメンバー一覧</option>
+      </select>
+       <input name="myFile" type="file" /><br />
+       <div class="col-md-offset-8 col-md-4">
+         <input type="submit" value="名前を取り出す" />
+         <a href="javascript:toggleUsage(true)">使い方を隠す</a>
+       </div>
+    </form>
+    <hr />
+    <div id="title"></div>
+    <div class="container-fluid">
+      <div class="row">
+        <div id="tutorial" class="col-md-offset-2 col-md-8 ">
+          <h2>使い方(グループチャット)</h2>
+          <h4>HTMLファイルを保存する</h4>
+          <img id="img" src="http://drive.google.com/uc?export=view&id=1_qmJw7VJTlxI6uTg6Rn68VGmQRBNAiKw" class="img-responsive img-thumbnail tutorial" alt="group chat">
+          <h4>HTMLファイルをアップロードする</h4>
+          <img src="http://drive.google.com/uc?export=view&id=1EDW0nhNj4A2mRzGVJ0OYc9g-WCiwtezW" class="img-responsive img-thumbnail tutorial" alt="group chat">
+          
+        </div>
+      </div>
+    </div>
+    <div id="output"></div>
+
+  
+</div>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+ </body>
+</html>
