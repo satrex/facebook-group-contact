@@ -85,33 +85,36 @@ function doGet() {
   return HtmlService.createHtmlOutputFromFile('index');
 }
 
-function test (){
-  var formObject = new Object();
-  formObject.myFile = DriveApp.getFileById("1X4EiJNtru4n-3rxQEo5NOZleFFzkBP8V");
-  processForm(formObject);
+function hoge(formObject){
+  var formBlob = formObject.myFile;
+  var blob = formBlob.getBlob();
+  var data = blob.getDataAsString();
+  
+  return 'hoge';
 }
 
 function getNames(formObject) {
   var formBlob = formObject.myFile;
-  var data = formBlob.getBlob().getDataAsString();
+  var blob = formBlob.getBlob();
+  var data = blob.getDataAsString();
   
   var kind = formObject.fileKind;
 //  var json = JSON.parse(data);
-  Logger.log("kind:" + kind);
+//  Logger.log("kind:" + kind);
   var names = null;
 //  if(data.match(friendsMatch)){
   if(kind === "friends"){
-    Logger.log("This file is friends");
+ //   Logger.log("This file is friends");
     names = getUserNamesFromFriends(data);
   }
 //  else if(data.match(groupMatch)){
   else if(kind === "group"){
-      Logger.log("This file is group");
+//      Logger.log("This file is group");
     names = getUserNamesFromGroup(data);
   }
 //  else if(data.match(groupChatMatch)){
   else if(kind === "groupchat"){
-      Logger.log("This file is group chat");
+//      Logger.log("This file is group chat");
     names = getUserNamesFromGroupChat(data);
   }
   
@@ -124,43 +127,4 @@ function getNames(formObject) {
   return newText;
 
 }
-
-
-function processForm(formObject) {
-  var formBlob = formObject.myFile;
-  var data = formBlob.getBlob().getDataAsString();
-  
-  var kind = formObject.fileKind;
-//  var json = JSON.parse(data);
-  Logger.log("kind:" + kind);
-  var names = null;
-//  if(data.match(friendsMatch)){
-  if(kind === "friends"){
-    Logger.log("This file is friends");
-    names = getUserNamesFromFriends(data);
-  }
-//  else if(data.match(groupMatch)){
-  else if(kind === "group"){
-      Logger.log("This file is group");
-    names = getUserNamesFromGroup(data);
-  }
-//  else if(data.match(groupChatMatch)){
-  else if(kind === "groupchat"){
-      Logger.log("This file is group chat");
-    names = getUserNamesFromGroupChat(data);
-  }
-  
-  else{
-    return "";
-  }
-  
-  var newText= names.join("\n");
-  var driveFile = DriveApp.createFile(formBlob);
-  driveFile.setContent(newText);
-
-  
-  return driveFile.getUrl();
-
-}
-
 

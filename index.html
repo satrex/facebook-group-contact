@@ -18,44 +18,77 @@
       window.addEventListener('load', preventFormSubmit);
 
       function handleFormSubmit(formObject) {
-//        google.script.run.withSuccessHandler(updateUrl).processForm(formObject);
+        showUsage(true);
+//        alert(formObject);
         google.script.run.withSuccessHandler(updateText).getNames(formObject);
+//        google.script.run.withSuccessHandler(updateText).hoge(formObject);
       }
 
       function updateText(text) {
-        var tutorialDiv = document.getElementById('tutorial');
-        tutorialDiv.style.display = 'none';
         var div = document.getElementById('output');
         div.innerText = text;
       }
       
-      function updateUrl(url) {
-        var div = document.getElementById('output');
-        div.innerHTML = '<a href="' + url + '">ファイルを開いてください</a>';
+      function toggleUsage(){
+
+        var tutorialDiv = document.getElementById('tutorial');        
+        var dispValue = tutorialDiv.style.display ;
+        //alert(dispValue);
+        var isHidden = dispValue !='none';
+        
+        showUsage(isHidden);
+
       }
       
-      function toggleUsage(bool isHidden){
+      function showUsage(isHidden){
         var value = isHidden? 'none': 'block';
-        var tutorialDiv = document.getElementById('tutorial');
-        tutorialDiv.style.display = value;
+        var tutorialDiv = document.getElementById('tutorial');        
+        tutorialDiv.style.display = value;        
+        
+        var disp = isHidden? '使い方を表示'　: '使い方を隠す' ;
+        var link = document.getElementById('toggleLink');
+        link.textContent = disp;
+        //alert(disp);
       }
       
-//      function comboChange(){
-//        alert('came');
-//        obj = document.myForm.fileKind;
-//
-//        index= obj.selectedIndex;
-//        alert(index);
-//        document.findElementById("img").source = source(index);
-//      }
-//      
-//      function source(i){
-//        var sources =
-//        ["http://drive.google.com/uc?export=view&id=1_qmJw7VJTlxI6uTg6Rn68VGmQRBNAiKw" ,
-//        "",
-//        "http://drive.google.com/uc?export=view&id=1hl2P2MRLJq6kfNf69CqwRxNHA3jwi_3J" ];
-//        return sources[i];
-//      }
+      function selectImg(){
+        var value = document.getElementsByName('fileKind')[0].selectedIndex;
+//        alert(value);
+      } 
+      
+      function comboChange(){
+        obj = document.getElementsByName('fileKind')[0];
+
+        index= obj.selectedIndex;
+        //alert(index);
+        document.getElementById("titletext").innerText = titles(index);
+        document.getElementById("img").src = "";
+        document.getElementById("img").src = source(index);
+      }
+      
+      function titles(i){
+        var titles = [
+          "使い方(友達一覧)",
+          "使い方(グループ)",
+          "使い方(グループチャット)"
+        ]; 
+        return titles[i];
+      }
+      
+      function source(i){
+        var sources =
+        [
+          "http://drive.google.com/uc?export=view&id=1_qmJw7VJTlxI6uTg6Rn68VGmQRBNAiKw" ,
+          "http://drive.google.com/uc?export=view&id=1X_Z9usF_i7fpb9dblSI5ivgUUjw5PHbe",
+          "http://drive.google.com/uc?export=view&id=1E5ymP7OWS2elx-L3GCPZJ2AWBqyAfSJ2" 
+        ];
+        return sources[i];
+      }
+      
+      function enableSubmitIfUploaded(){
+        var disabled = 0===document.getElementsByName("myFile")[0].value.length;
+        document.getElementById("submitbtn").disabled = disabled;
+      }
     </script>
   </head>
   <body>
@@ -70,10 +103,10 @@
         <option value="group">グループメンバー一覧</option>
         <option value="groupchat">グループチャットメンバー一覧</option>
       </select>
-       <input name="myFile" type="file" /><br />
-       <div class="col-md-offset-8 col-md-4">
-         <input type="submit" value="名前を取り出す" />
-         <a href="javascript:toggleUsage(true)">使い方を隠す</a>
+       <input name="myFile" type="file" onchange="enableSubmitIfUploaded()"/><br />
+       <div class="col-md-offset-4 col-md-8">
+         <input id="submitbtn" type="submit" value="名前を取り出す" disabled="true"/>
+         <a id="toggleLink" href="javascript:toggleUsage()">使い方を隠す</a>
        </div>
     </form>
     <hr />
@@ -81,7 +114,7 @@
     <div class="container-fluid">
       <div class="row">
         <div id="tutorial" class="col-md-offset-2 col-md-8 ">
-          <h2>使い方(グループチャット)</h2>
+          <h2 id="titletext">使い方(友達一覧)</h2>
           <h4>HTMLファイルを保存する</h4>
           <img id="img" src="http://drive.google.com/uc?export=view&id=1_qmJw7VJTlxI6uTg6Rn68VGmQRBNAiKw" class="img-responsive img-thumbnail tutorial" alt="group chat">
           <h4>HTMLファイルをアップロードする</h4>
